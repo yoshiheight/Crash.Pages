@@ -1,0 +1,80 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Net" #>
+
+<# /* 検索ページのHTMLを生成するランタイムテキストテンプレート */ #>
+
+<#
+var siteName = (string)Session["sitename"];
+#>
+
+<div>
+
+    <div style="margin-bottom: 1em;">
+        <form action="<#= Crash.Pages.Model.WebPage.Parts.Content.SearchContent.PermalinkConst #>" method="get" onsubmit="return crashPagesSearchView.validateSearchSubmit();">
+            <input type="search" id="input-search-keyword" name="q" placeholder="キーワードを入力" style="margin-right: 3px;"><button type="submit" class="search-button">検索</button>
+        </form>
+    </div>
+
+    <!-- 検索結果件数 -->
+    <div id="header-article-list"></div>
+
+    <!-- 検索結果一覧 -->
+    <div id="body-article-list"></div>
+
+</div>
+
+<script>
+    class CrashPagesSearchView {
+        constructor() {
+            this.restoreScroll = null;
+
+            $(() => {
+                this.restoreScroll = new PagesRestoreScroll("<#= Crash.Core.GuidUtil.NewNormalGuidString() #>");
+
+                $("#input-search-keyword").focus();
+
+                let queryMap = CrashUtil.getQueryStringMap();
+                let queryString = CrashUtil.decodeSearchQueryString(queryMap.get("q"));
+                if (queryString.length === 0) {
+                    return;
+                }
+
+                $("#input-search-keyword").val(queryString);
+
+                document.title = "検索 " + queryString + " - <#= siteName #>";
+
+                $("#header-article-list").text("検索中...");
+
+                // 検索開始
+                let pagesSearch = new PagesSearch(
+                    "<#= Crash.Pages.Model.WebPage.Parts.Content.SearchContent.AjaxDataPermalinkFormat #>?v=<#= Crash.Core.GuidUtil.NewNormalGuidString() #>",
+                    (indexData, searchHitItem) => crashPagesLayoutView.searchHitCallback(indexData, searchHitItem),
+                    hitCount => this.searchCompleteCallback(hitCount));
+                pagesSearch.search(queryString, "");
+            });
+        }
+
+        // 検索ボタン押下時の入力チェック
+        validateSearchSubmit() {
+            if ($("#input-search-keyword").val().trim().length !== 0) {
+                return true;
+            }
+
+            $("#input-search-keyword").focus();
+            return false;
+        }
+
+        // 検索完了時の処理
+        searchCompleteCallback(hitCount) {
+            $("#header-article-list").text("検索結果 (" + hitCount + "件)");
+
+            this.restoreScroll.restore();
+        }
+    }
+
+    var crashPagesSearchView = new CrashPagesSearchView();
+</script>

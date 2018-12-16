@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.15.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.CodeDom" Version="4.5.0" />
+    <PackageReference Include="YamlDotNet" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Crash.Core\Crash.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="WebPage\Layout\Template\LayoutTemplate.tthtml">
+      <LastGenOutput>LayoutTemplate.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="WebPage\Parts\Content\Template\ArticleContentTemplate.tthtml">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ArticleContentTemplate.cs</LastGenOutput>
+    </None>
+    <None Update="WebPage\Parts\Content\Template\TopContentTemplate.tthtml">
+      <LastGenOutput>TopContentTemplate.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="WebPage\Parts\Content\Template\SearchContentTemplate.tthtml">
+      <LastGenOutput>SearchContentTemplate.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="WebPage\Parts\Content\Template\TagSearchContentTemplate.tthtml">
+      <LastGenOutput>TagSearchContentTemplate.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

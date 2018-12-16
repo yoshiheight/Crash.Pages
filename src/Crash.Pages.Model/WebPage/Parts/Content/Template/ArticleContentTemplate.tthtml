@@ -1,0 +1,69 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Net" #>
+
+<# /* 記事コンテンツの部分HTMLを生成するランタイムテキストテンプレート */ #>
+
+<#
+var article = (Crash.Pages.Model.WebPage.Parts.Content.ArticleContent)Session["article"];
+var htmlFromMarkdown = (string)Session["htmlFromMarkdown"];
+#>
+
+<script>
+    class CrashPagesArticleView {
+        constructor() {
+            this.tocHeadingSelector = "h3, h4";
+
+            $(() => {
+                CrashUtil.createToc("#article-body", this.tocHeadingSelector, "#toc");
+            });
+        }
+    }
+
+    var crashPagesArticleView = new CrashPagesArticleView();
+</script>
+
+<article id="entry-article">
+    <div id="entry-article-inner">
+        <!-- 記事ヘッダー -->
+        <header id="article-header">
+            <!-- 記事タイトル -->
+            <h1><#= WebUtility.HtmlEncode(article.Title) #></h1>
+
+            <div id="article-header-annotation">
+                <!-- タグ -->
+                <div class="tags">
+                    <# if (article.Tags != null) { #>
+                        <# foreach (var tagName in article.Tags) { #>
+                            <div class="tag">
+                                <a href="<#= Crash.Pages.Model.WebPage.Parts.Content.TagSearchContent.PermalinkConst #>?t=<#= WebUtility.UrlEncode(tagName) #>"><#= WebUtility.HtmlEncode(tagName) #></a>
+                            </div>
+                        <# } #>
+                    <# } #>
+                </div>
+
+                <!-- 日付 -->
+                <time datetime="<#= article.Date #>"><#= article.Date #></time>
+            </div>
+
+            <# if (article.IsShowMarkdownFilePath) { #>
+                <!-- Markdownファイルパス表示 -->
+                <div id="markdown-filepath-info">
+                    <span id="markdown-filepath"><#= article.MarkdownFilePath #></span>
+                    <button type="button" onclick="CrashUtil.copyElement(document.getElementById('markdown-filepath'));">コピー</button>
+                </div>
+            <# } #>
+        </header>
+
+        <!-- 記事内容 -->
+        <div id="article-body" class="normal-link">
+            <#= htmlFromMarkdown #>
+        </div>
+    </div>
+
+    <!-- 目次 -->
+    <nav id="toc"></nav>
+</article>

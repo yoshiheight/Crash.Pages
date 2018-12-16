@@ -1,0 +1,59 @@
+@charset "utf-8";
+
+#header {
+    padding: 8px 20px;
+    color: #eeeeee;
+    background-color: #294965;
+}
+
+#header-inner {
+    /*margin: 0 0;*/ /* 左寄せレイアウト */
+    margin: 0 auto; /* 中央寄せレイアウト */
+    max-width: 1120px; /* 中央寄せレイアウト */
+}
+
+#footer {
+    padding: 8px 20px;
+    color: gray;
+    background-color: white;
+    border-top: 1px solid #e4e4e4;
+    font-size: 80%;
+}
+
+#footer-inner {
+    /*margin: 0 0;*/ /* 左寄せレイアウト */
+    margin: 0 auto; /* 中央寄せレイアウト */
+    max-width: 1120px; /* 中央寄せレイアウト */
+    text-align: center;
+}
+
+#container {
+    padding: 20px 0;
+    background-color: white;
+}
+
+#container-inner {
+    padding: 0 20px;
+    /*margin: 0 0;*/ /* 左寄せレイアウト */
+    margin: 0 auto; /* 中央寄せレイアウト */
+    max-width: 1120px; /* 中央寄せレイアウト */
+}
+
+#wrapper {
+    width: 100%;
+    padding-bottom: 20px;
+    box-sizing: border-box; /* パディングとボーダーを幅と高さに含める */
+}
+
+@media screen and (min-width: 480px) {
+}
+
+@media screen and (min-width: 640px) {
+}
+
+@media screen and (min-width: 960px) {
+    /* 中央寄せレイアウト */
+    #container-inner {
+        /*border-left: 1px solid #e4e4e4;*/ /* 縦線デザイン */
+    }
+}

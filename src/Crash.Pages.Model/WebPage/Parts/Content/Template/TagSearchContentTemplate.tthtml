@@ -1,0 +1,64 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Net" #>
+
+<# /* タグページのHTMLを生成するランタイムテキストテンプレート */ #>
+
+<#
+var siteName = (string)Session["sitename"];
+var sidebar = (Crash.Pages.Model.WebPage.Parts.Sidebar)Session["sidebar"];
+#>
+
+<div>
+
+    <!-- 検索結果件数 -->
+    <div id="header-article-list"></div>
+
+    <!-- 検索結果一覧 -->
+    <div id="body-article-list"></div>
+
+</div>
+
+<script>
+    class CrashPagesTagSearchView {
+        constructor() {
+            this.restoreScroll = null;
+
+            $(() => {
+                this.restoreScroll = new PagesRestoreScroll("<#= Crash.Core.GuidUtil.NewNormalGuidString() #>");
+
+                let queryMap = CrashUtil.getQueryStringMap();
+                let tagName = CrashUtil.decodeSearchQueryString(queryMap.get("t"));
+                if (tagName.length === 0) {
+                    return;
+                }
+
+                let tagMap = new Map();
+                <# foreach(var tagInfo in sidebar.TagInfos) { #>
+                    tagMap.set("<#= tagInfo.Name #>", <#= tagInfo.Count #>);
+                <# } #>
+
+                document.title = "タグ " + tagName + " - <#= siteName #>";
+
+                $("#header-article-list").text("「" + tagName + "」の記事 (" + tagMap.get(tagName) + "件)");
+
+                // 検索開始
+                let pagesSearch = new PagesSearch(
+                    "<#= Crash.Pages.Model.WebPage.Parts.Content.TagSearchContent.AjaxDataPermalinkFormat #>?v=<#= Crash.Core.GuidUtil.NewNormalGuidString() #>",
+                    (indexData, searchHitItem) => crashPagesLayoutView.searchHitCallback(indexData, searchHitItem),
+                    hitCount => this.searchCompleteCallback(hitCount));
+                pagesSearch.search("", tagName);
+            });
+        }
+
+        // 検索完了時の処理
+        searchCompleteCallback(hitCount) {
+            this.restoreScroll.restore();
+        }
+    }
+
+    var crashPagesTagSearchView = new CrashPagesTagSearchView();
+</script>
