@@ -1,4 +1,4 @@
-# CrashPages
+# Crash.Pages
 
 * C#製の静的サイトジェネレーターです
 * 説明
